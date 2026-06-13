@@ -114,6 +114,8 @@ class XsenseMqtt:
         self._client.connect(self._host, self._port)
         try:
             self._client.loop_forever()
+        except KeyboardInterrupt:
+            self.log.info("Stopping MQTT client...")
         finally:
             self._client.disconnect()
 
