@@ -1,15 +1,8 @@
 import logging
 from typing import Any, Callable
-from sys import stdout
 
 import paho.mqtt.client as mqtt
 from json import loads, JSONDecodeError
-
-logging.basicConfig(
-    level=logging.DEBUG,
-    format="[%(levelname)s] %(asctime)s - %(message)s",
-    handlers=[logging.StreamHandler(stdout)]
-)
 
 TOPIC = "homeassistant/binary_sensor/+/+/state"
 DETECTED_STATUS = "Detected"
@@ -123,7 +116,3 @@ class XsenseMqtt:
             self.log.info("Stopping MQTT client...")
         finally:
             self._client.disconnect()
-
-
-x = XsenseMqtt("kg-rpi.fritz.box", username="xsense", password="xsense", stations=["SBS5015A9D25D"])
-x.listen()

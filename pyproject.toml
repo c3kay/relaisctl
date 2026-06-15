@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools >= 82", "setuptools-scm >= 9"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "relaisctl"
+authors = [{name = "c3kay"}]
+description = "Control a Raspberry Pi Relais."
+readme = "README.md"
+license = {text = "MIT License"}
+requires-python = ">=3.10"
+dependencies = [
+    "paho-mqtt ~= 2.1.0",
+    'tomli ~= 2.2.1 ; python_version < "3.11"'
+]
+dynamic = ["version"]
+
+[project.urls]
+"Repository" = "https://github.com/c3kay/relaisctl"
+
+[project.scripts]
+relaisctl = "relaisctl.__main__:cli"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
+version_scheme = "python-simplified-semver"
