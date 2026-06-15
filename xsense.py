@@ -41,6 +41,7 @@ class XsenseMqtt:
 
         self.on_detect: Callable[[str], None] | None = None
         self.on_clear: Callable[[str], None] | None = None
+        self.on_update: Callable[[str, bool], None] | None = None
 
         self.log = logging.getLogger(f"{__name__}.{self.__class__.__name__}")
 
@@ -107,6 +108,10 @@ class XsenseMqtt:
                     if self.on_clear:
                         self.log.debug("Running clear callback")
                         self.on_clear(station)
+
+                if self.on_update:
+                    self.log.debug("Running update callback")
+                    self.on_update(station, station_alarm)
 
 
     def listen(self) -> None:
