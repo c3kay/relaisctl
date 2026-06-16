@@ -5,12 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "relaisctl"
 authors = [{name = "c3kay"}]
-description = "Control a Raspberry Pi Relais."
+description = "Control a Raspberry Pi Relais via MQTT."
 readme = "README.md"
 license = {text = "MIT License"}
 requires-python = ">=3.10"
 dependencies = [
     "paho-mqtt ~= 2.1.0",
+    "RPi.GPIO ~= 0.7.1",
     'tomli ~= 2.2.1 ; python_version < "3.11"'
 ]
 dynamic = ["version"]
