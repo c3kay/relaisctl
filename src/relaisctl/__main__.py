@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import argparse
 from pathlib import Path
 
@@ -86,21 +87,25 @@ def cli() -> None:
     )
 
     arg_parser.add_argument(
-        "-l",
-        "--log-path",
+        "--debug",
         required=False,
-        default=None,
-        help="Path to the written log file",
-        type=Path,
+        help="Toggle debug mode",
+        action="store_true",
     )
 
     args = arg_parser.parse_args()
 
     logging.basicConfig(
-        filename=args.log_path,
-        filemode="a",
         format="%(asctime)s | %(levelname)-8s | %(message)s",
-        level=logging.DEBUG,
+        level=logging.DEBUG if args.debug else logging.INFO,
+        handlers=[
+            logging.StreamHandler(),
+            RotatingFileHandler(
+                filename="/var/log/relaisctl.log",
+                maxBytes=10_485_760,
+                backupCount=5
+            ),
+        ],
     )
 
     run(config_path=args.config_path)
