@@ -1,0 +1,10 @@
+[Unit]
+Description=Control Relais via MQTT
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/relaisctl -c /etc/relaisctl.toml
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
