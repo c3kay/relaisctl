@@ -15,8 +15,13 @@ logger = logging.getLogger(__package__)
 
 
 def run(config_path: Path) -> None:
-    with config_path.open("rb") as f:
-        conf = toml.load(f)
+    try:
+        with config_path.open("rb") as f:
+            conf = toml.load(f)
+    except FileNotFoundError:
+        conf = {}
+        config_path.touch(mode=0o644)
+        logger.warning("Config file at '%s' not found! Created new file.", config_path)
 
     mqtt_conf = conf.get("mqtt", {})
     stations_conf = conf.get("stations", [])
@@ -29,11 +34,16 @@ def run(config_path: Path) -> None:
     try:
         stations = {}
         for s in stations_conf:
-            logger.debug("Found station in config: %s", s["id"])
             stations[s["id"]] = {
                 "r1": s.get("r1", False),
                 "r2": s.get("r2", False),
             }
+            logger.info(
+                "Found station '%s': R1=%s, R2=%s",
+                s["id"],
+                "active" if stations[s["id"]]["r1"] else "inactive",
+                "active" if stations[s["id"]]["r2"] else "inactive",
+            )
     except KeyError:
         logger.error("Invalid station configuration!")
         raise
@@ -70,6 +80,7 @@ def run(config_path: Path) -> None:
     xsense.on_detect = on_detect
     xsense.on_clear = on_clear
 
+    logger.info("Start listening for MQTT messages...")
     xsense.listen()
 
 def cli() -> None:
