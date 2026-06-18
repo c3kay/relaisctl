@@ -47,8 +47,8 @@ class XsenseMqtt:
         properties: mqtt.Properties,
     ) -> None:
         """Connection callback."""
-        self.log.info(f"Connected to {self._host} with result code: {reason_code}")
-        self.log.debug(f"Flags: {flags}")
+        self.log.info(f"Connection to {self._host}: {reason_code}")
+        self.log.debug(f"Flags: {flags} - Properties: {properties}")
         client.subscribe(TOPIC)
 
     def _on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage) -> None:
@@ -109,10 +109,11 @@ class XsenseMqtt:
 
     def listen(self) -> None:
         """Connect to the MQTT broker and listen for incoming messages."""
+        self.log.info("Starting MQTT client")
         self._client.connect(self._host, self._port)
         try:
             self._client.loop_forever()
         except KeyboardInterrupt:
-            self.log.info("Stopping MQTT client...")
+            self.log.info("Stopping MQTT client")
         finally:
             self._client.disconnect()

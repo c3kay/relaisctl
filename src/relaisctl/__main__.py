@@ -24,7 +24,7 @@ def run(config_path: Path) -> None:
         logger.warning("Config file at '%s' not found! Created new file.", config_path)
 
     mqtt_conf = conf.get("mqtt", {})
-    stations_conf = conf.get("stations", [])
+    station_conf = conf.get("station", [])
 
     host = mqtt_conf.get("host", "localhost")
     port = mqtt_conf.get("port", 1883)
@@ -33,7 +33,7 @@ def run(config_path: Path) -> None:
 
     try:
         stations = {}
-        for s in stations_conf:
+        for s in station_conf:
             stations[s["id"]] = {
                 "r1": s.get("r1", False),
                 "r2": s.get("r2", False),
@@ -90,7 +90,7 @@ def cli() -> None:
 
     arg_parser.add_argument(
         "-c",
-        "--config-path",
+        "--config",
         required=False,
         default="config.toml",
         help="Path to the TOML config file",
@@ -119,7 +119,7 @@ def cli() -> None:
         ],
     )
 
-    run(config_path=args.config_path)
+    run(config_path=args.config)
 
 
 if __name__ == "__main__":
