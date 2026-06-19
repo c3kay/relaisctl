@@ -84,10 +84,15 @@ class XsenseMqtt:
                     if sensor.startswith(station)
                 ])
 
+                # call on any update with current station alarm
+                if self.on_update:
+                    self.log.debug("Running update callback")
+                    self.on_update(station, station_alarm)
+
                 # first occurrence of alarm if not already in alarm state
                 if not alarm and station_alarm:
                     self.alarms[station] = True
-                    self.log.info("Alarm detected from '%s'!", station)
+                    self.log.info("Alarm from '%s' detected", station)
 
                     if self.on_detect:
                         self.log.debug("Running detection callback")
@@ -96,15 +101,11 @@ class XsenseMqtt:
                 # currently in alarm state but no alarm detected
                 if alarm and not station_alarm:
                     self.alarms[station] = False
-                    self.log.info("Alarm cleared from '%s'!", station)
+                    self.log.info("Alarm from '%s' cleared", station)
 
                     if self.on_clear:
                         self.log.debug("Running clear callback")
                         self.on_clear(station)
-
-                if self.on_update:
-                    self.log.debug("Running update callback")
-                    self.on_update(station, station_alarm)
 
 
     def listen(self) -> None:
