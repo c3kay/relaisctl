@@ -1,0 +1,15 @@
+[mqtt]
+host = "mqtt-broker.local"
+port = 1883
+username = "user"
+password = "pass"
+
+[[station]]
+id = "SBS12345"
+r1 = true
+r2 = false
+
+[[station]]
+id = "SBS67890"
+r1 = false
+r2 = true
